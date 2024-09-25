@@ -21,7 +21,7 @@ def sequential_search(a_list, item):
         if a_list[pos] == item:
             found = True
         else:
-            pos = pos + 1
+            pos = + 1
 
     return found
 
@@ -57,37 +57,69 @@ def binary_search_iterative(a_list,item):
             else:
                 first = midpoint + 1
 
-    return found
+    return found 
     
     
 def binary_search_recursive(a_list,item):
     if len(a_list) == 0:
-        return False
+        return False, time.time() 
     else:
         midpoint = len(a_list) // 2
         if a_list[midpoint] == item:
-            return True
+            return True, time.time() 
         else:
             if item < a_list[midpoint]:
                 return binary_search_recursive(a_list[:midpoint], item)
             else:
                 return binary_search_recursive(a_list[midpoint + 1:], item)
+            
 
-
-if __name__ == "__main__":
+def main():
     """Main entry point"""
-    the_size = 500
+    sizes = [500, 1000, 5000]
+    target = 99999999
+    num_trials = 100
 
-    total_time = 0
-    for i in range(100):
-        mylist = get_me_random_list(the_size)
-        # sorting is not needed for sequential search.
-        mylist = sorted(mylist)
+    for the_size in sizes:
+        print(f"\nBenchmarking search algorithms for list size {the_size},,,")
 
-        start = time.time()
-        check = binary_search_iterative(mylist, 99999999)
-        time_spent = time.time() - start
-        total_time += time_spent
+        for the_size in sizes: 
+            sequential_total_time = 0
+            ordered_sequential_total_time = 0
+            binary_iterative_total_time = 0
+            binary_recursive_total_time = 0 
 
-    avg_time = total_time / 100
-    print(f"Binary Search Iterative took {avg_time:10.7f} seconds to run, on average for a list of {the_size} elements")
+    
+        for i in range(num_trials):
+            mylist = get_me_random_list(the_size)
+            # sorting is not needed for sequential search.
+            mylist = sorted(mylist)
+
+            start = time.time()
+            sequential_search(mylist, target)
+            sequential_total_time += time.time() - start
+
+
+            start = time.time()
+            ordered_sequential_search(mylist, target)
+            ordered_sequential_total_time += time.time() - start
+
+            start = time.time()
+            binary_search_iterative(mylist, target)
+            binary_iterative_total_time += time.time() - start 
+
+            start + time.time()
+            binary_search_recursive(mylist, target)
+            binary_recursive_total_time += time.time() - start
+
+        
+            avg_sequential_time = sequential_total_time / 100
+            avg_ordered_sequential_time = ordered_sequential_total_time / 100 
+            avg_binary_iterative_time = binary_iterative_total_time / 100
+            avg_binary_recursive_time = binary_recursive_total_time / 100
+
+    
+            print(f"Sequential search took {avg_sequential_time:10.7f} seconds to ru, on average for a list of {the_size} elements")
+            print(f"Ordered sequential time took {avg_ordered_sequential_time:10.7f} seconds to run, on average for a list of {the_size} elements")
+            print(f"Binary Search Iterative took {avg_binary_iterative_time:10.7f} seconds to run, on average for a list of {the_size} elements")
+            print(f"Binary Search Recursive took {avg_binary_recursive_time:10.7f} seconds to run, on average for a list of {the_size} elements") 
